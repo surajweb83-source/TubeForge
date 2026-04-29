@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'API key is missing in Vercel!' });
+      return res.status(500).json({ error: 'API key missing!' });
     }
 
     const controller = new AbortController();
@@ -38,18 +38,31 @@ module.exports = async function handler(req, res) {
 
     const data = await response.json();
 
+    console.log('Gemini status:', response.status);
+    console.log('Gemini response:', JSON.stringify(data));
+
     if (!response.ok) {
-      return res.status(500).json({ error: data.error?.message || 'AI Error' });
+      return res.status(500).json({ 
+        error: data.error?.message || 'Gemini API Error',
+        details: JSON.stringify(data)
+      });
+    }
+
+    if (!data.candidates || !data.candidates[0]) {
+      return res.status(500).json({ 
+        error: 'No response from Gemini',
+        details: JSON.stringify(data)
+      });
     }
 
     const aiText = data.candidates[0].content.parts[0].text;
     res.status(200).json({ result: aiText });
 
   } catch (error) {
-    console.error(error);
+    console.error('Catch error:', error.message);
     if (error.name === 'AbortError') {
       return res.status(504).json({ error: 'Timeout!' });
     }
-    res.status(500).json({ error: 'Server crashed!' });
+    res.status(500).json({ error: error.message });
   }
 };
