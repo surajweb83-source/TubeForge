@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TubeForge Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#080808;--surface:#111;--card:#161616;--border:#222;--red:#FF0000;--text:#F0F0F0;--muted:#888;--success:#00C853;--warning:#FFB300;}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;}
+    /* LOGIN */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:36px;width:100%;max-width:380px;text-align:center;}
+    .login-logo{font-size:28px;font-weight:800;margin-bottom:6px;}
+    .login-logo span{color:var(--red);}
+    .login-sub{color:var(--muted);font-size:13px;margin-bottom:28px;}
+    .login-box input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;margin-bottom:12px;}
+    .login-box input:focus{border-color:var(--red);}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:10px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;transition:all 0.2s;width:100%;justify-content:center;}
+    .btn-red{background:var(--red);color:#fff;}
+    .btn-red:hover{background:#CC0000;}
+    .error-msg{color:var(--red);font-size:12px;margin-top:8px;display:none;}
+    /* ADMIN LAYOUT */
+    .admin-wrap{display:none;}
+    .admin-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+    .admin-logo{font-size:18px;font-weight:700;}
+    .admin-logo span{color:var(--red);}
+    .logout-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;}
+    .logout-btn:hover{color:var(--red);}
+    .admin-body{max-width:1100px;margin:0 auto;padding:28px 20px;}
+    /* TABS */
+    .tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+    .tab{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;}
+    .tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+    /* CARDS */
+    .section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;}
+    .card h3{font-size:14px;font-weight:600;margin-bottom:14px;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;}
+    .stat-num{font-size:32px;font-weight:800;color:var(--red);}
+    .stat-label{font-size:11px;color:var(--muted);margin-top:4px;}
+    /* FORM */
+    label{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase;}
+    input[type="text"],input[type="password"],textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;margin-bottom:12px;}
+    input:focus,textarea:focus,select:focus{border-color:var(--red);}
+    textarea{resize:vertical;min-height:80px;}
+    .save-btn{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;}
+    .save-btn:hover{background:#CC0000;}
+    /* TOGGLE */
+    .tool-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+    .tool-row:last-child{border-bottom:none;}
+    .tool-name{font-size:13px;font-weight:500;}
+    .toggle{position:relative;width:44px;height:24px;cursor:pointer;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .slider{position:absolute;inset:0;background:var(--border);border-radius:12px;transition:0.3s;}
+    .slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:0.3s;}
+    input:checked+.slider{background:var(--red);}
+    input:checked+.slider:before{transform:translateX(20px);}
+    /* ANNOUNCE BAR */
+    .announce-bar{background:var(--red);color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:500;display:none;}
+    /* MESSAGE */
+    .msg-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+    .msg-meta{font-size:11px;color:var(--muted);margin-bottom:6px;}
+    .msg-text{font-size:13px;line-height:1.5;}
+    .msg-del{background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.2);color:var(--red);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;float:right;}
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:13px;z-index:999;transform:translateY(50px);opacity:0;transition:all 0.3s;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr;}.tabs{gap:4px;}.tab{font-size:12px;padding:7px 12px;}}
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCE BAR -->
+<div class="announce-bar" id="announceBar"></div>
+
+<!-- LOGIN PAGE -->
+<div class="login-wrap" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">Tube<span>Forge</span></div>
+    <p class="login-sub">Admin Panel — Secure Login</p>
+    <input type="password" id="passInput" placeholder="Enter password..." onkeydown="if(event.key==='Enter')checkLogin()"/>
+    <button class="btn btn-red" onclick="checkLogin()">🔐 Login</button>
+    <p class="error-msg" id="errMsg">❌ Wrong password! Try again.</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-wrap" id="adminWrap">
+  <div class="admin-header">
+    <div class="admin-logo">Tube<span>Forge</span> Admin</div>
+    <button class="logout-btn" onclick="logout()">Logout ↗</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+      <button class="tab" onclick="switchTab('tools')">🛠️ Tools</button>
+      <button class="tab" onclick="switchTab('announce')">📢 Announcement</button>
+      <button class="tab" onclick="switchTab('adsense')">💰 AdSense</button>
+      <button class="tab" onclick="switchTab('seo')">🔍 SEO</button>
+      <button class="tab" onclick="switchTab('messages')">💬 Messages</button>
+      <button class="tab" onclick="switchTab('settings')">⚙️ Settings</button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div class="tab-content active" id="tab-dashboard">
+      <p class="section-title">📊 Overview Stats</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="stat-visits">0</div><div class="stat-label">Total Visits</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-today">0</div><div class="stat-label">Today</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-tools">15</div><div class="stat-label">Active Tools</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-clicks">0</div><div class="stat-label">Tool Clicks</div></div>
+      </div>
+      <div class="card">
+        <h3>🏆 Most Used Tools</h3>
+        <div id="top-tools-list"></div>
+      </div>
+      <div class="card">
+        <h3>⚡ Quick Actions</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="save-btn" onclick="window.open('https://tube-forge-ivory.vercel.app','_blank')">🌐 View Website</button>
+          <button class="save-btn" style="background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="resetStats()">🗑️ Reset Stats</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLS TAB -->
+    <div class="tab-content" id="tab-tools">
+      <p class="section-title">🛠️ Tools Management</p>
+      <div class="card">
+        <h3>Enable / Disable Tools</h3>
+        <div id="tools-list"></div>
+        <div style="margin-top:14px;">
+          <button class="save-btn" onclick="saveTools()">💾 Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT TAB -->
+    <div class="tab-content" id="tab-announce">
+      <p class="section-title">📢 Announcement Bar</p>
+      <div class="card">
+        <h3>Homepage Banner</h3>
+        <label>Announcement Text</label>
+        <input type="text" id="ann-text" placeholder="e.g. 🔥 New Tool Added: AI Title Generator!" />
+        <label>Status</label>
+        <select id="ann-status">
+          <option value="off">OFF — Hidden</option>
+          <option value="on">ON — Visible</option>
+        </select>
+        <button class="save-btn" onclick="saveAnnouncement()">💾 Save Announcement</button>
+      </div>
+    </div>
+
+    <!-- ADSENSE TAB -->
+    <div class="tab-content" id="tab-adsense">
+      <p class="section-title">💰 AdSense Management</p>
+      <div class="card">
+        <h3>Ad Position 1 — Top Banner (728×90)</h3>
+        <label>AdSense Code</label>
+        <textarea id="ad-code-1" placeholder="Paste your AdSense script code here..."></textarea>
+        <select id="ad-1-status" style="margin-bottom:12px;">
+          <option value="off">OFF — Show Placeholder</option>
+          <option value="on">ON — Show Real Ad</option>
+        </select>
+        <button class="save-btn" onclick="saveAd(1)">💾 Save Ad 1</button>
+      </div>
+      <div class="card">
+        <h3>Ad Position 2 — In-Feed (300×250)</h3>
+        <label>AdSense Code</label>
+        <textarea id="ad-code-2" placeholder="Paste your AdSense script code here..."></textarea>
+        <select id="ad-2-status" style="margin-bottom:12px;">
+          <option value="off">OFF — Show Placeholder</option>
+          <option value="on">ON — Show Real Ad</option>
+        </select>
+        <button class="save-btn" onclick="saveAd(2)">💾 Save Ad 2</button>
+      </div>
+      <div class="card" style="background:rgba(255,179,0,0.05);border-color:rgba(255,179,0,0.2);">
+        <h3 style="color:var(--warning);">⚠️ AdSense Approval Tips</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+          ✅ Website par daily 20-30 visitors chahiye<br>
+          ✅ Privacy Policy page banana hoga<br>
+          ✅ About page complete hona chahiye<br>
+          ✅ Minimum 10-15 pages/content<br>
+          ✅ Blog section add karo SEO ke liye<br>
+          ✅ Apply karo: <a href="https://adsense.google.com" target="_blank" style="color:var(--red);">adsense.google.com</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO TAB -->
+    <div class="tab-content" id="tab-seo">
+      <p class="section-title">🔍 SEO Settings</p>
+      <div class="card">
+        <h3>Homepage Meta Tags</h3>
+        <label>Meta Title</label>
+        <input type="text" id="seo-title" placeholder="TubeForge — Free YouTube Tools for Creators" />
+        <label>Meta Description</label>
+        <textarea id="seo-desc" placeholder="Free YouTube tools for content creators..."></textarea>
+        <label>Keywords</label>
+        <input type="text" id="seo-keywords" placeholder="youtube tools, thumbnail downloader, tags generator..." />
+        <button class="save-btn" onclick="saveSEO()">💾 Save SEO Settings</button>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">⚠️ Note: Meta changes index.html mein manually update karne honge</p>
+      </div>
+    </div>
+
+    <!-- MESSAGES TAB -->
+    <div class="tab-content" id="tab-messages">
+      <p class="section-title">💬 Contact Messages</p>
+      <div id="messages-list"></div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="tab-settings">
+      <p class="section-title">⚙️ Admin Settings</p>
+      <div class="card">
+        <h3>Change Admin Password</h3>
+        <label>Current Password</label>
+        <input type="password" id="cur-pass" placeholder="Current password..."/>
+        <label>New Password</label>
+        <input type="password" id="new-pass" placeholder="New password..."/>
+        <label>Confirm New Password</label>
+        <input type="password" id="conf-pass" placeholder="Confirm new password..."/>
+        <button class="save-btn" onclick="changePassword()">🔐 Update Password</button>
+      </div>
+      <div class="card">
+        <h3>Website Info</h3>
+        <label>Website Name</label>
+        <input type="text" id="site-name" value="TubeForge"/>
+        <label>Website URL</label>
+        <input type="text" id="site-url" value="https://tube-forge-ivory.vercel.app"/>
+        <button class="save-btn" onclick="saveSiteInfo()">💾 Save Info</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="adminToast">✅ Saved!</div>
+
+<script>
+  const ADMIN_PASS_KEY = 'tf_admin_pass';
+  const DEFAULT_PASS = 'tubeforge123';
+
+  const tools = [
+    {id:'thumbnail',name:'🖼️ Thumbnail Downloader'},
+    {id:'tags',name:'🏷️ Tags Generator'},
+    {id:'title',name:'📝 Title Generator'},
+    {id:'description',name:'📄 Description Generator'},
+    {id:'hashtag',name:'#️⃣ Hashtag Generator'},
+    {id:'embed',name:'🔗 Embed Code Generator'},
+    {id:'timestamp',name:'⏱️ Timestamp Link Generator'},
+    {id:'videoid',name:'🔍 Video ID Extractor'},
+    {id:'urlshort',name:'✂️ URL Shortener'},
+    {id:'subscribe',name:'🔔 Subscribe Link Generator'},
+    {id:'chapter',name:'📚 Chapter Generator'},
+    {id:'seo',name:'📊 SEO Score Checker'},
+    {id:'monetize',name:'💰 Monetization Checker'},
+    {id:'watchtime',name:'⏰ Watch Time Calculator'},
+    {id:'ctr',name:'📈 CTR Calculator'},
+  ];
+
+  function getPass() { return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS; }
+
+  function checkLogin() {
+    const input = document.getElementById('passInput').value;
+    if (input === getPass()) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminWrap').style.display = 'block';
+      loadDashboard();
+      loadTools();
+      loadMessages();
+      loadSettings();
+    } else {
+      document.getElementById('errMsg').style.display = 'block';
+      document.getElementById('passInput').value = '';
+    }
+  }
+
+  function logout() {
+    document.getElementById('adminWrap').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('passInput').value = '';
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('adminToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // DASHBOARD
+  function loadDashboard() {
+    const visits = parseInt(localStorage.getItem('tf_total_visits') || 0);
+    const today = parseInt(localStorage.getItem('tf_today_visits') || 0);
+    const clicks = parseInt(localStorage.getItem('tf_total_clicks') || 0);
+    document.getElementById('stat-visits').textContent = visits;
+    document.getElementById('stat-today').textContent = today;
+    document.getElementById('stat-clicks').textContent = clicks;
+
+    // Track visit
+    const todayKey = new Date().toDateString();
+    if (localStorage.getItem('tf_last_date') !== todayKey) {
+      localStorage.setItem('tf_last_date', todayKey);
+      localStorage.setItem('tf_today_visits', 1);
+    } else {
+      localStorage.setItem('tf_today_visits', today + 1);
+    }
+    localStorage.setItem('tf_total_visits', visits + 1);
+
+    // Top tools
+    const toolClicks = JSON.parse(localStorage.getItem('tf_tool_clicks') || '{}');
+    const sorted = Object.entries(toolClicks).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const list = document.getElementById('top-tools-list');
+    if (sorted.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted);font-size:13px;">No data yet — visit your website first!</p>';
+    } else {
+      list.innerHTML = sorted.map(([id,count],i) => {
+        const tool = tools.find(t=>t.id===id);
+        return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+          <span>${i+1}. ${tool ? tool.name : id}</span>
+          <span style="color:var(--red);font-weight:600;">${count} clicks</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  function resetStats() {
+    if (confirm('Sab stats delete karein?')) {
+      ['tf_total_visits','tf_today_visits','tf_total_clicks','tf_tool_clicks'].forEach(k=>localStorage.removeItem(k));
+      loadDashboard();
+      showToast('Stats reset kar diye!');
+    }
+  }
+
+  // TOOLS
+  function loadTools() {
+    const saved = JSON.parse(localStorage.getItem('tf_tools_status') || '{}');
+    const list = document.getElementById('tools-list');
+    list.innerHTML = tools.map(t => `
+      <div class="tool-row">
+        <span class="tool-name">${t.name}</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-${t.id}" ${saved[t.id] !== false ? 'checked' : ''}>
+          <span class="slider"></span>
+        </label>
+      </div>`).join('');
+  }
+
+  function saveTools() {
+    const status = {};
+    tools.forEach(t => { status[t.id] = document.getElementById('toggle-'+t.id).checked; });
+    localStorage.setItem('tf_tools_status', JSON.stringify(status));
+    showToast('✅ Tools status saved!');
+  }
+
+  // ANNOUNCEMENT
+  function saveAnnouncement() {
+    const text = document.getElementById('ann-text').value;
+    const status = document.getElementById('ann-status').value;
+    localStorage.setItem('tf_announce', JSON.stringify({text, status}));
+    showToast('✅ Announcement saved!');
+  }
+
+  function loadSettings() {
+    const ann = JSON.parse(localStorage.getItem('tf_announce') || '{}');
+    if (ann.text) document.getElementById('ann-text').value = ann.text;
+    if (ann.status) document.getElementById('ann-status').value = ann.status;
+    const seo = JSON.parse(localStorage.getItem('tf_seo') || '{}');
+    if (seo.title) document.getElementById('seo-title').value = seo.title;
+    if (seo.desc) document.getElementById('seo-desc').value = seo.desc;
+    if (seo.keywords) document.getElementById('seo-keywords').value = seo.keywords;
+    const ad1 = JSON.parse(localStorage.getItem('tf_ad_1') || '{}');
+    if (ad1.code) document.getElementById('ad-code-1').value = ad1.code;
+    if (ad1.status) document.getElementById('ad-1-status').value = ad1.status;
+    const ad2 = JSON.parse(localStorage.getItem('tf_ad_2') || '{}');
+    if (ad2.code) document.getElementById('ad-code-2').value = ad2.code;
+    if (ad2.status) document.getElementById('ad-2-status').value = ad2.status;
+  }
+
+  // ADSENSE
+  function saveAd(num) {
+    const code = document.getElementById(`ad-code-${num}`).value;
+    const status = document.getElementById(`ad-${num}-status`).value;
+    localStorage.setItem(`tf_ad_${num}`, JSON.stringify({code, status}));
+    showToast(`✅ Ad ${num} settings saved!`);
+  }
+
+  // SEO
+  function saveSEO() {
+    const title = document.getElementById('seo-title').value;
+    const desc = document.getElementById('seo-desc').value;
+    const keywords = document.getElementById('seo-keywords').value;
+    localStorage.setItem('tf_seo', JSON.stringify({title, desc, keywords}));
+    showToast('✅ SEO settings saved!');
+  }
+
+  // MESSAGES
+  function loadMessages() {
+    const msgs = JSON.parse(localStorage.getItem('tf_messages') || '[]');
+    const list = document.getElementById('messages-list');
+    if (msgs.length === 0) {
+      list.innerHTML = '<div class="card"><p style="color:var(--muted);font-size:13px;text-align:center;">Koi message nahi hai abhi 📭</p></div>';
+    } else {
+      list.innerHTML = msgs.map((m,i) => `
+        <div class="msg-card">
+          <div class="msg-meta">
+            <button class="msg-del" onclick="deleteMsg(${i})">Delete</button>
+            📅 ${m.date} &nbsp;|&nbsp; 👤 ${m.name || 'Anonymous'}
+          </div>
+          <div class="msg-text">${m.message}</div>
+        </div>`).join('');
+    }
+  }
+
+  function deleteMsg(idx) {
+    const msgs = JSON.parse(localStorage.getItem('tf_messages') || '[]');
+    msgs.splice(idx, 1);
+    localStorage.setItem('tf_messages', JSON.stringify(msgs));
+    loadMessages();
+    showToast('Message delete ho gaya!');
+  }
+
+  // PASSWORD CHANGE
+  function changePassword() {
+    const cur = document.getElementById('cur-pass').value;
+    const nw = document.getElementById('new-pass').value;
+    const conf = document.getElementById('conf-pass').value;
+    if (cur !== getPass()) { showToast('❌ Current password wrong!'); return; }
+    if (nw !== conf) { showToast('❌ Passwords match nahi karte!'); return; }
+    if (nw.length < 6) { showToast('❌ Password min 6 chars hona chahiye!'); return; }
+    localStorage.setItem(ADMIN_PASS_KEY, nw);
+    showToast('✅ Password change ho gaya!');
+    ['cur-pass','new-pass','conf-pass'].forEach(id => document.getElementById(id).value='');
+  }
+
+  function saveSiteInfo() {
+    showToast('✅ Info saved!');
+  }
+</script>
+</body>
+</html>
