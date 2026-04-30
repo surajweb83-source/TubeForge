@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Creator Blog — TubeForge</title>
+  <meta name="description" content="Read the latest YouTube growth tips, SEO strategies, and tutorial guides on the TubeForge blog. Master the algorithm in 2026."/>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808; --surface: #111111; --card: #161616; --border: #222222;
+      --red: #FF0000; --red-dim: #CC0000; --text: #F0F0F0; --muted: #888888; --muted2: #555555;
+      --font-head: 'Bebas Neue', sans-serif; --font-body: 'Outfit', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 3px; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--font-head); font-size: 26px; letter-spacing: 1px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--red); }
+    .logo-icon { background: var(--red); color: white; width: 32px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    nav { display: flex; gap: 6px; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover, nav a.active { color: var(--text); background: var(--card); }
+    .burger { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 22px; }
+
+    /* Mobile Nav */
+    .mobile-nav { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 150; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .mobile-nav.open { opacity: 1; pointer-events: all; }
+    .mobile-nav a { color: var(--text); font-size: 20px; text-decoration: none; font-weight: 600; }
+    .mobile-nav a:hover { color: var(--red); }
+    .mobile-nav .close-nav { background: var(--card); border: none; color: var(--text); padding: 10px 24px; border-radius: 10px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+
+    /* Blog Header */
+    .hero { padding: 60px 24px 30px; text-align: center; max-width: 800px; margin: 0 auto; animation: fadeInUp 0.5s ease both; }
+    .hero h1 { font-family: var(--font-head); font-size: clamp(44px, 6vw, 64px); letter-spacing: 2px; }
+    .hero p { color: var(--muted); font-size: 16px; margin-top: 8px; }
+
+    /* Filters & Search */
+    .controls { max-width: 1100px; margin: 0 auto 30px; padding: 0 24px; text-align: center; animation: fadeInUp 0.5s ease 0.1s both; }
+    .search-bar { max-width: 400px; margin: 0 auto 20px; position: relative; }
+    .search-bar input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; color: var(--text); font-family: var(--font-body); font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .search-bar input:focus { border-color: var(--red); }
+    
+    .category-filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .filter-btn:hover { background: var(--card); color: var(--text); }
+    .filter-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+    /* Blog Grid */
+    .blog-container { max-width: 1100px; margin: 0 auto 60px; padding: 0 24px; }
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; animation: fadeInUp 0.5s ease 0.2s both; }
+    
+    .blog-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: transform 0.2s; display: flex; flex-direction: column; }
+    .blog-card:hover { transform: translateY(-4px); border-color: #333; }
+    
+    .blog-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .blog-icon { font-size: 32px; background: var(--surface); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+    .blog-badge { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    
+    .badge-SEO { background: rgba(0,200,83,0.15); color: #00C853; }
+    .badge-Growth { background: rgba(255,179,0,0.15); color: #FFB300; }
+    .badge-Tools { background: rgba(0,180,255,0.15); color: #00B4FF; }
+    .badge-Monetization { background: rgba(180,100,255,0.15); color: #B464FF; }
+    .badge-Tips { background: rgba(255,0,0,0.15); color: var(--red); }
+
+    .blog-card h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.4; }
+    .blog-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+    
+    .blog-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; }
+    .blog-date { font-size: 11px; color: var(--muted2); }
+    .read-btn { background: none; border: none; color: var(--red); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-body); display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s; }
+    .read-btn:hover { color: var(--red-dim); }
+
+    /* Modal for Full Article */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    
+    .modal { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; transform: translateY(20px) scale(0.97); transition: transform 0.25s; display: flex; flex-direction: column; }
+    .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+    
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+    .modal-title-bar { display: flex; align-items: center; gap: 10px; }
+    .modal-close { background: var(--card); border: none; color: var(--muted); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.2s; }
+    .modal-close:hover { background: var(--border); color: white; }
+
+    .modal-body { padding: 30px 24px; color: var(--text); }
+    .modal-body h1 { font-size: 26px; margin-bottom: 10px; line-height: 1.3; font-family: var(--font-head); letter-spacing: 1px; color: var(--red); }
+    .modal-meta { font-size: 12px; color: var(--muted); margin-bottom: 24px; display: flex; gap: 12px; }
+    
+    .article-content { font-size: 15px; line-height: 1.8; color: #D0D0D0; }
+    .article-content h2 { font-size: 18px; margin: 24px 0 12px; color: white; }
+    .article-content p { margin-bottom: 16px; }
+    .article-content ul { padding-left: 20px; margin-bottom: 16px; }
+    .article-content li { margin-bottom: 8px; }
+    .article-content a { color: var(--red); text-decoration: none; font-weight: 600; }
+    .article-content a:hover { text-decoration: underline; }
+    
+    .article-cta { background: var(--card); border: 1px dashed var(--red); border-radius: 12px; padding: 20px; text-align: center; margin-top: 30px; }
+
+    /* Footer */
+    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 24px 24px; text-align: center; }
+    .footer-logo { font-family: var(--font-head); font-size: 28px; letter-spacing: 1px; margin-bottom: 10px; }
+    .footer-logo span { color: var(--red); }
+    footer p { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--red); }
+    .footer-copy { margin-top: 24px; font-size: 11px; color: var(--muted2); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 640px) { nav { display: none; } .burger { display: block; } }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="/" onclick="toggleMobileNav()">🏠 Home</a>
+  <a href="/about.html" onclick="toggleMobileNav()">ℹ️ About</a>
+  <a href="/blog.html" onclick="toggleMobileNav()">📝 Blog</a>
+  <a href="/privacy-policy.html" onclick="toggleMobileNav()">🔒 Privacy Policy</a>
+  <button class="close-nav" onclick="toggleMobileNav()">✕ Close</button>
+</div>
+
+<!-- Header -->
+<header>
+  <a href="/" class="logo"><div class="logo-icon">▶</div>Tube<span>Forge</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/blog.html" class="active">Blog</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+  </nav>
+  <button class="burger" onclick="toggleMobileNav()">☰</button>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>TUBEFORGE BLOG</h1>
+  <p>YouTube tips, algorithm tricks & creator guides for 2026</p>
+</section>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search articles..." oninput="filterBlogs()"/>
+  </div>
+  <div class="category-filters" id="filters">
+    <button class="filter-btn active" onclick="setFilter('All', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('SEO', this)">SEO</button>
+    <button class="filter-btn" onclick="setFilter('Growth', this)">Growth</button>
+    <button class="filter-btn" onclick="setFilter('Tools', this)">Tools</button>
+    <button class="filter-btn" onclick="setFilter('Monetization', this)">Monetization</button>
+    <button class="filter-btn" onclick="setFilter('Tips', this)">Tips</button>
+  </div>
+</div>
+
+<!-- ADSENSE AD UNIT -->
+<div style="text-align:center; padding:10px; max-width:1100px; margin:0 auto 30px; background:var(--card); border:1px dashed var(--border); border-radius:8px; color:var(--muted2); font-size:11px; min-height:90px; display:flex; align-items:center; justify-content:center;">
+  AdSense Ad Space — 728x90
+</div>
+
+<!-- Blog Grid -->
+<div class="blog-container">
+  <div class="blog-grid" id="blogGrid">
+    <!-- Rendered via JS -->
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Tube<span>Forge</span></div>
+  <p>Free YouTube tools for every content creator.</p>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+  </div>
+  <div class="footer-copy">© 2026 TubeForge — 100% Free, No Login Required</div>
+</footer>
+
+<!-- Modal for Reading Blog -->
+<div class="modal-overlay" id="blogModal" onclick="handleModalClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-bar">
+        <span id="m-icon" style="font-size:20px;"></span>
+        <span class="blog-badge" id="m-badge"></span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <h1 id="m-title"></h1>
+      <div class="modal-meta" id="m-date"></div>
+      
+      <!-- ADSENSE AD UNIT (Inside Modal) -->
+      <div style="text-align:center; padding:10px; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:8px; color:var(--muted2); font-size:11px; min-height:100px; display:flex; align-items:center; justify-content:center;">
+        AdSense Ad Space — Responsive
+      </div>
+
+      <div class="article-content" id="m-content"></div>
+      
+      <div class="article-cta">
+        <h3 style="color:white; margin-bottom:8px;">Ready to implement this?</h3>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">Use our free AI toolkit to grow your channel today.</p>
+        <button onclick="window.location.href='/'" style="background:var(--red); color:white; border:none; padding:10px 20px; border-radius:8px; font-family:var(--font-body); font-weight:600; cursor:pointer;">🚀 Go to Free Tools</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  // --- BLOG DATA ---
+  const blogs = [
+    {
+      id: 1, icon: '🖼️', category: 'Tools', date: 'April 20, 2026',
+      title: 'How to Get 4K YouTube Thumbnails for Free',
+      excerpt: 'Learn the secret trick to download high-resolution 4K thumbnails from any YouTube video instantly without software.',
+      content: `
+        <p>Thumbnails are the most critical part of getting clicks on YouTube. Sometimes, as a creator, you need to study successful thumbnails or download your old thumbnails that you lost on your hard drive.</p>
+        <h2>Why Quality Matters</h2>
+        <p>A blurry thumbnail looks unprofessional. YouTube saves thumbnails in multiple resolutions (SD, HQ, MQ, HD, and MAX/4K). However, getting the 4K version directly from the page source is a tedious process for most people.</p>
+        <h2>The Free Solution</h2>
+        <p>Instead of digging into HTML code, you can use automated tools. Our completely free <a href="/">Thumbnail Downloader</a> allows you to paste any YouTube URL and instantly grabs all available resolutions, including the hidden 4K (maxresdefault) version.</p>
+        <ul>
+          <li><strong>Step 1:</strong> Copy the YouTube video link.</li>
+          <li><strong>Step 2:</strong> Open the TubeForge Thumbnail tool.</li>
+          <li><strong>Step 3:</strong> Paste the link and click Download on the 4K option.</li>
+        </ul>
+        <p>It's completely free and works on mobile as well!</p>
+      `
+    },
+    {
+      id: 2, icon: '🏷️', category: 'SEO', date: 'April 18, 2026',
+      title: '25 YouTube SEO Tags Tips to Rank Higher in 2026',
+      excerpt: 'Tags are not dead! Discover how the algorithm reads your metadata and how to use AI to generate the perfect tag list.',
+      content: `
+        <p>Many creators claim "tags don't matter anymore", but YouTube official documentation still states that tags help users find your video, especially if the topic is commonly misspelled.</p>
+        <h2>How to Tag in 2026</h2>
+        <ul>
+          <li><strong>Broad to Specific:</strong> Start your first tag with your exact target keyword. Then move to broader topics.</li>
+          <li><strong>Don't Keyword Stuff:</strong> YouTube penalizes descriptions packed with tags. Put tags in the tag box, not the description text.</li>
+          <li><strong>Include Misspellings:</strong> If your video is about "iPhone", tag "iphne" or "i phone".</li>
+        </ul>
+        <h2>Use AI for Tags</h2>
+        <p>Thinking of 25 tags takes time. That's why we built the <a href="/">AI Tags Generator</a>. Just type your video topic, select your niche, and our AI will generate highly optimized, relevant short-tail and long-tail tags in seconds.</p>
+      `
+    },
+    {
+      id: 3, icon: '📄', category: 'SEO', date: 'April 15, 2026',
+      title: 'How to Write the Perfect YouTube Description',
+      excerpt: 'The first 200 characters of your description decide if you rank on Google and YouTube. Here is the ultimate template.',
+      content: `
+        <p>A great YouTube description serves two masters: The viewer and the Search Engine (SEO).</p>
+        <h2>The 3-Part Description Formula</h2>
+        <p><strong>1. The Hook (First 200 Chars):</strong> This shows up in search results. It MUST include your main keyword naturally. Example: "In this complete 2026 tutorial, learn how to bake a chocolate cake..."</p>
+        <p><strong>2. The Body (Timestamps & Details):</strong> Add video chapters (0:00 Intro). This allows Google Search to index different parts of your video.</p>
+        <p><strong>3. The Footer (Links & Hashtags):</strong> Put your social links, affiliate links, and exactly 3 to 5 relevant hashtags at the very bottom.</p>
+        <h2>Generate it Automatically</h2>
+        <p>Writing this manually is exhausting. Try the TubeForge <a href="/">AI Description Generator</a> to get a fully formatted, SEO-optimized description tailored to your specific video topic in just one click.</p>
+      `
+    },
+    {
+      id: 4, icon: '🚀', category: 'Growth', date: 'April 10, 2026',
+      title: 'How to Reach 1000 Subscribers Fast',
+      excerpt: 'Stuck below 1k subs? Follow this step-by-step strategy to hit your first major YouTube milestone.',
+      content: `
+        <p>Getting your first 1,000 subscribers is the hardest part of YouTube. You have no momentum, no loyal base. Here is how to break through.</p>
+        <h2>1. Double Down on YouTube Shorts</h2>
+        <p>Shorts are the ultimate subscriber magnet in 2026. The algorithm pushes Shorts to new audiences constantly. Aim to post 3 Shorts a week alongside your long-form content.</p>
+        <h2>2. Ask the Right Way</h2>
+        <p>Don't just say "Please subscribe" at the start. Say it when you deliver value. "If this tip helped you save time, hit subscribe for more tricks like this."</p>
+        <h2>3. Use Auto-Subscribe Links</h2>
+        <p>Whenever you share your channel link on Twitter, Instagram, or a blog, use an Auto-Subscribe Link. When people click it, a prompt appears asking them to confirm subscription. You can generate one instantly using our <a href="/">Subscribe Link Generator</a>.</p>
+      `
+    },
+    {
+      id: 5, icon: '💰', category: 'Monetization', date: 'April 05, 2026',
+      title: 'YouTube Monetization: Complete Guide 2026',
+      excerpt: 'Everything you need to know about the YouTube Partner Program, requirements, and how to track your progress.',
+      content: `
+        <p>Making money directly from AdSense is a major goal for creators. In 2026, YouTube offers multiple tiers of monetization.</p>
+        <h2>The Requirements</h2>
+        <ul>
+          <li><strong>Tier 1 (Fan Funding):</strong> 500 Subscribers + 3,000 Watch Hours (or 3M Shorts Views). Unlocks Super Chats, Memberships, and Shopping.</li>
+          <li><strong>Tier 2 (Ad Revenue):</strong> 1,000 Subscribers + 4,000 Watch Hours (or 10M Shorts Views). Unlocks video ad revenue.</li>
+        </ul>
+        <h2>Common Mistakes to Avoid</h2>
+        <p>Do not buy subscribers or watch time. YouTube's algorithm easily detects bot traffic and will reject your application or permanently ban your channel.</p>
+        <h2>Track Your Eligibility</h2>
+        <p>Curious how close you are? Use our free <a href="/">Monetization Checker</a> and <a href="/">Watch Time Calculator</a> to see exactly where you stand and how many more views you need.</p>
+      `
+    },
+    {
+      id: 6, icon: '#️⃣', category: 'SEO', date: 'April 01, 2026',
+      title: 'Best Hashtags Strategy for YouTube in 2026',
+      excerpt: 'Should you use 3 hashtags or 15? Discover the optimal hashtag strategy to increase your video reach.',
+      content: `
+        <p>Hashtags (#) on YouTube work differently than on Instagram or TikTok. They are primarily used to group content and appear above your video title.</p>
+        <h2>The Golden Rule of YouTube Hashtags</h2>
+        <p><strong>Never use more than 15 hashtags.</strong> If you use more than 15, YouTube ignores ALL of them, and it may flag your video as spam.</p>
+        <h2>The Perfect Mix</h2>
+        <p>Aim for exactly 3 to 5 highly relevant hashtags at the bottom of your description. The first 3 will be displayed prominently. Mix one broad tag (#Gaming), one niche tag (#MinecraftSurvival), and one hyper-specific tag.</p>
+        <p>Don't know which to choose? Use the TubeForge <a href="/">AI Hashtag Generator</a> to find the best trending hashtags for your specific topic.</p>
+      `
+    },
+    {
+      id: 7, icon: '📈', category: 'Growth', date: 'March 28, 2026',
+      title: 'How to Improve Your YouTube CTR',
+      excerpt: 'Click-Through Rate is the king of the algorithm. Learn the psychology behind thumbnails that get clicked.',
+      content: `
+        <p>CTR (Click-Through Rate) is simply: Out of 100 people who saw your thumbnail, how many clicked it? If your CTR is below 4%, the algorithm stops showing your video.</p>
+        <h2>How to Boost CTR Instantly</h2>
+        <ul>
+          <li><strong>Less Text is More:</strong> Thumbnails are tiny on mobile phones. Never use more than 4 words on a thumbnail.</li>
+          <li><strong>The Curiosity Gap:</strong> Your title shouldn't tell the whole story. Make them ask "Why?" or "How?".</li>
+          <li><strong>Color Contrast:</strong> Avoid red and white backgrounds (they blend in with YouTube's UI). Use Blues, Greens, and Yellows.</li>
+        </ul>
+        <p>You can check if your current stats are healthy using our <a href="/">CTR Calculator</a>. If it's low, try generating new titles with our <a href="/">AI Title Generator</a>.</p>
+      `
+    },
+    {
+      id: 8, icon: '⏰', category: 'Growth', date: 'March 22, 2026',
+      title: 'YouTube Watch Time: How to Increase It Fast',
+      excerpt: 'If CTR gets them to click, Watch Time keeps the algorithm happy. Here are editing tricks to hold attention.',
+      content: `
+        <p>High CTR with low Watch Time tells YouTube your video is clickbait. You need both to go viral.</p>
+        <h2>The First 30 Seconds</h2>
+        <p>The drop-off in the first 30 seconds is brutal. Do not start with a long 15-second branded intro. Start exactly where the thumbnail promised the story would start.</p>
+        <h2>Pacing and Pattern Interrupts</h2>
+        <p>Every 10-15 seconds, something on the screen should change. A zoom in, a text pop-up, a sound effect, or b-roll footage. This resets the viewer's attention span.</p>
+        <p>Need to calculate your total hours? Use our <a href="/">Watch Time Calculator</a> to see how your average view duration translates into total hours.</p>
+      `
+    },
+    {
+      id: 9, icon: '💡', category: 'Tips', date: 'March 15, 2026',
+      title: 'How to Make Viral YouTube Titles',
+      excerpt: 'Stop writing boring titles. Learn the emotion-driven title formulas used by MrBeast and top creators.',
+      content: `
+        <p>A good video with a bad title will get 0 views. Titles must evoke emotion: Curiosity, Fear, Greed, or Joy.</p>
+        <h2>Title Formulas that Work</h2>
+        <ul>
+          <li><strong>The "I Tested" Formula:</strong> "I Tested the Cheapest Tech on Amazon"</li>
+          <li><strong>The "Mistake" Formula:</strong> "7 Mistakes Ruining Your PC Build"</li>
+          <li><strong>The "Timeframe" Formula:</strong> "Learn Python in 24 Hours"</li>
+        </ul>
+        <p>Don't struggle to write these yourself. TubeForge has an <a href="/">AI Title Generator</a> trained on viral videos. Just enter your topic, select "Curiosity" or "Shocking", and get 10 viral ideas instantly.</p>
+      `
+    },
+    {
+      id: 10, icon: '🛠️', category: 'Tools', date: 'March 10, 2026',
+      title: 'Free vs Paid YouTube Tools: What You Need',
+      excerpt: 'Do you really need to pay $30/month for SEO tools? We breakdown what is actually necessary for a creator.',
+      content: `
+        <p>The creator economy is flooded with expensive SaaS tools charging monthly subscriptions just to suggest tags or check SEO.</p>
+        <h2>The Truth About Paid Tools</h2>
+        <p>While paid tools offer deep historical data, 95% of creators only need basic optimization: a good title, relevant tags, a clean description, and a CTR check.</p>
+        <p>That is exactly why we built TubeForge. We offer 15+ premium-grade tools like SEO Score Checking, Tag Generation, and Title AI — <strong>100% Free</strong>. No login required. Bookmark <a href="/">TubeForge</a> and save your money for better camera gear!</p>
+      `
+    },
+    {
+      id: 11, icon: '🧠', category: 'Growth', date: 'March 05, 2026',
+      title: 'YouTube Algorithm Explained Simply',
+      excerpt: 'Stop guessing. Here is the simple math behind how YouTube decides which video goes viral on the homepage.',
+      content: `
+        <p>The YouTube Algorithm isn't a monster trying to hide your videos. It's an AI designed to do one thing: Keep viewers on YouTube as long as possible.</p>
+        <h2>The Two Pillars</h2>
+        <p><strong>1. Click-Through Rate (CTR):</strong> Did they click your video when they saw it? (Thumbnail + Title).</p>
+        <p><strong>2. Average View Duration (AVD):</strong> Did they watch until the end? (Content + Editing).</p>
+        <h2>The Secret Metric: Satisfaction</h2>
+        <p>YouTube now surveys users ("How was this video?"). Likes, comments, and shares factor into this. Always ask a compelling question in your video to drive comments! Check your metadata score with our <a href="/">SEO Score Checker</a> to ensure you're giving the algorithm the right text data.</p>
+      `
+    },
+    {
+      id: 12, icon: '📚', category: 'Tips', date: 'February 28, 2026',
+      title: 'How to Create Chapters in YouTube Videos',
+      excerpt: 'Chapters improve user experience and boost your video ranking on Google Search. Here is how to format them correctly.',
+      content: `
+        <p>Video chapters are markers on your timeline that allow viewers to skip to specific sections. More importantly, Google uses these chapters to display your video directly in Google Search results!</p>
+        <h2>The Rules of Chapters</h2>
+        <ul>
+          <li>The first chapter MUST start exactly at <code>0:00</code>.</li>
+          <li>You need at least 3 chapters in the video.</li>
+          <li>Each chapter must be at least 10 seconds long.</li>
+        </ul>
+        <h2>The Easy Way</h2>
+        <p>Formatting this manually can lead to typos that break the chapters. Use our <a href="/">Chapter Generator</a> tool. Just type your times and titles, and it will generate the perfect copy-paste list for your description.</p>
+      `
+    }
+  ];
+
+  let currentCategory = 'All';
+
+  function renderBlogs() {
+    const grid = document.getElementById('blogGrid');
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    
+    const filtered = blogs.filter(b => {
+      const matchCat = currentCategory === 'All' || b.category === currentCategory;
+      const matchSearch = b.title.toLowerCase().includes(query) || b.excerpt.toLowerCase().includes(query);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted); grid-column:1/-1; text-align:center; padding:40px;">No articles found.</p>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(b => `
+      <div class="blog-card">
+        <div class="blog-top">
+          <div class="blog-icon">${b.icon}</div>
+          <div class="blog-badge badge-${b.category}">${b.category}</div>
+        </div>
+        <h3>${b.title}</h3>
+        <p>${b.excerpt}</p>
+        <div class="blog-footer">
+          <span class="blog-date">${b.date}</span>
+          <button class="read-btn" onclick="openBlog(${b.id})">Read Article →</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function setFilter(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
+    renderBlogs();
+  }
+
+  function filterBlogs() {
+    renderBlogs();
+  }
+
+  // Modal Handling
+  function openBlog(id) {
+    const blog = blogs.find(b => b.id === id);
+    if(!blog) return;
+
+    document.getElementById('m-icon').textContent = blog.icon;
+    const badge = document.getElementById('m-badge');
+    badge.textContent = blog.category;
+    badge.className = `blog-badge badge-${blog.category}`;
+    
+    document.getElementById('m-title').textContent = blog.title;
+    document.getElementById('m-date').innerHTML = `📅 ${blog.date} &nbsp;•&nbsp; ⏱️ 3 min read`;
+    document.getElementById('m-content').innerHTML = blog.content;
+
+    document.getElementById('blogModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('blogModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function handleModalClick(e) {
+    if(e.target.id === 'blogModal') closeModal();
+  }
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeModal();
+  });
+
+  // Init
+  renderBlogs();
+</script>
+</body>
+</html>
