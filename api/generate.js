@@ -13,42 +13,29 @@ module.exports = async function handler(req, res) {
 
   try {
     const { prompt } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
-      return res.status(500).json({ error: 'API key missing!' });
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt missing!' });
     }
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 9000);
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+      `https://text.pollinations.ai/${encodeURIComponent(prompt)}`,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        }),
+        method: 'GET',
         signal: controller.signal
       }
     );
 
     clearTimeout(timeoutId);
 
-    const data = await response.json();
-
     if (!response.ok) {
-      return res.status(500).json({ 
-        error: data.error?.message || 'Gemini API Error'
-      });
+      return res.status(500).json({ error: 'AI Error!' });
     }
 
-    if (!data.candidates || !data.candidates[0]) {
-      return res.status(500).json({ error: 'No response from Gemini' });
-    }
-
-    const aiText = data.candidates[0].content.parts[0].text;
+    const aiText = await response.text();
     res.status(200).json({ result: aiText });
 
   } catch (error) {
