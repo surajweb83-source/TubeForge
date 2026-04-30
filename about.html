@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us — TubeForge</title>
+  <meta name="description" content="Learn about TubeForge, the ultimate free AI-powered toolkit for YouTube creators. No signup, 100% free tools to grow your channel."/>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808; --surface: #111111; --card: #161616; --border: #222222;
+      --red: #FF0000; --red-dim: #CC0000; --red-glow: rgba(255,0,0,0.15);
+      --text: #F0F0F0; --muted: #888888; --muted2: #555555;
+      --success: #00C853; --font-head: 'Bebas Neue', sans-serif; --font-body: 'Outfit', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 3px; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--font-head); font-size: 26px; letter-spacing: 1px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--red); }
+    .logo-icon { background: var(--red); color: white; width: 32px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    nav { display: flex; gap: 6px; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover, nav a.active { color: var(--text); background: var(--card); }
+    .burger { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 22px; }
+
+    /* Mobile Nav */
+    .mobile-nav { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 150; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .mobile-nav.open { opacity: 1; pointer-events: all; }
+    .mobile-nav a { color: var(--text); font-size: 20px; text-decoration: none; font-weight: 600; }
+    .mobile-nav a:hover { color: var(--red); }
+    .mobile-nav .close-nav { background: var(--card); border: none; color: var(--text); padding: 10px 24px; border-radius: 10px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+
+    /* Layout Components */
+    .container { max-width: 1000px; margin: 0 auto; padding: 60px 24px; }
+    .hero-title { font-family: var(--font-head); font-size: clamp(40px, 6vw, 70px); text-align: center; letter-spacing: 2px; margin-bottom: 30px; animation: fadeInUp 0.5s ease both; }
+    .hero-title span { color: var(--red); }
+    
+    .mission-box { background: linear-gradient(145deg, var(--card), var(--surface)); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden; animation: fadeInUp 0.5s ease 0.1s both; }
+    .mission-box::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%); pointer-events: none; }
+    .mission-box h2 { font-size: 22px; color: var(--red); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .mission-box p { font-size: 16px; color: var(--text); line-height: 1.8; max-width: 700px; margin: 0 auto; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 50px; animation: fadeInUp 0.5s ease 0.2s both; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; }
+    .stat-num { font-size: 32px; font-family: var(--font-head); color: var(--red); letter-spacing: 1px; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+
+    .section-label { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 20px; text-align: center; animation: fadeInUp 0.5s ease 0.3s both; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 50px; animation: fadeInUp 0.5s ease 0.4s both; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; align-items: flex-start; gap: 14px; }
+    .feature-icon { font-size: 24px; background: var(--card); border: 1px solid var(--border); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 10px; flex-shrink: 0; }
+    .feature-info h3 { font-size: 15px; margin-bottom: 4px; }
+    .feature-info p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 50px; animation: fadeInUp 0.5s ease 0.5s both; }
+    .why-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; transition: transform 0.2s; }
+    .why-card:hover { transform: translateY(-3px); border-color: var(--red); }
+    .why-icon { font-size: 32px; margin-bottom: 12px; }
+    .why-card h3 { font-size: 16px; margin-bottom: 8px; }
+    .why-card p { font-size: 13px; color: var(--muted); }
+
+    .tools-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 50px; animation: fadeInUp 0.5s ease 0.6s both; }
+    .tool-tag { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+
+    .cta-box { text-align: center; padding: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; animation: fadeInUp 0.5s ease 0.7s both; }
+    .cta-box h2 { font-size: 24px; margin-bottom: 10px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--red); color: white; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; margin-top: 16px; border: none; cursor: pointer; }
+    .btn-primary:hover { background: var(--red-dim); }
+
+    /* Footer */
+    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 24px 24px; text-align: center; }
+    .footer-logo { font-family: var(--font-head); font-size: 28px; letter-spacing: 1px; margin-bottom: 10px; }
+    .footer-logo span { color: var(--red); }
+    footer p { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--red); }
+    .footer-copy { margin-top: 24px; font-size: 11px; color: var(--muted2); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .why-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { nav { display: none; } .burger { display: block; } .mission-box { padding: 30px 20px; } }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="/" onclick="toggleMobileNav()">🏠 Home</a>
+  <a href="/about.html" onclick="toggleMobileNav()">ℹ️ About</a>
+  <a href="/blog.html" onclick="toggleMobileNav()">📝 Blog</a>
+  <a href="/privacy-policy.html" onclick="toggleMobileNav()">🔒 Privacy Policy</a>
+  <button class="close-nav" onclick="toggleMobileNav()">✕ Close</button>
+</div>
+
+<!-- Header -->
+<header>
+  <a href="/" class="logo"><div class="logo-icon">▶</div>Tube<span>Forge</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about.html" class="active">About</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+  </nav>
+  <button class="burger" onclick="toggleMobileNav()">☰</button>
+</header>
+
+<div class="container">
+  <h1 class="hero-title">ABOUT <span>TUBEFORGE</span></h1>
+
+  <div class="mission-box">
+    <h2>Our Mission</h2>
+    <p>TubeForge is built with a single goal: to empower YouTube creators with professional-grade, AI-powered tools completely free of charge. We believe you shouldn't have to pay expensive monthly subscriptions just to optimize your videos, design titles, or check your channel's SEO. No signups, no credit cards, just pure value for creators.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num">15+</div><div class="stat-label">Powerful Tools</div></div>
+    <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Free Forever</div></div>
+    <div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Signup Needed</div></div>
+    <div class="stat-card"><div class="stat-num">AI</div><div class="stat-label">Powered Engine</div></div>
+  </div>
+
+  <!-- ADSENSE AD UNIT -->
+  <div style="text-align:center; padding:10px; background:var(--card); border:1px dashed var(--border); border-radius:8px; margin-bottom:50px; color:var(--muted2); font-size:11px; min-height:90px; display:flex; align-items:center; justify-content:center;">
+    AdSense Ad Space — 728x90
+  </div>
+
+  <p class="section-label">Core Features</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🖼️</div>
+      <div class="feature-info"><h3>Thumbnail Downloader</h3><p>Extract thumbnails in ultra 4K quality.</p></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏷️</div>
+      <div class="feature-info"><h3>AI Tags Generator</h3><p>Get 25+ smart SEO tags instantly.</p></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <div class="feature-info"><h3>AI Title Generator</h3><p>Generate 10 viral-worthy title ideas.</p></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <div class="feature-info"><h3>AI Description Gen</h3><p>Full SEO description with chapters.</p></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-info"><h3>SEO Score Checker</h3><p>Analyze your video metadata score.</p></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <div class="feature-info"><h3>CTR Calculator</h3><p>Check if your thumbnail is performing.</p></div>
+    </div>
+  </div>
+
+  <p class="section-label">Why Choose Us?</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">✅</div>
+      <h3>100% Free Forever</h3>
+      <p>We rely on minimal ads to keep servers running. You never pay a dime.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <h3>No Signup Required</h3>
+      <p>Your time is valuable. Open the website, paste your link, and get results instantly.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🤖</div>
+      <h3>AI Powered</h3>
+      <p>We use advanced generative AI to provide context-aware titles, tags, and descriptions.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔒</div>
+      <h3>Privacy First</h3>
+      <p>We don't track your personal YouTube accounts or ask for API access to your channel.</p>
+    </div>
+  </div>
+
+  <p class="section-label">All 15+ Tools Integrated</p>
+  <div class="tools-tags">
+    <div class="tool-tag">Thumbnail Downloader</div>
+    <div class="tool-tag">AI Tags Generator</div>
+    <div class="tool-tag">Title Generator</div>
+    <div class="tool-tag">Description Generator</div>
+    <div class="tool-tag">Hashtag Generator</div>
+    <div class="tool-tag">SEO Checker</div>
+    <div class="tool-tag">Monetization Checker</div>
+    <div class="tool-tag">Watch Time Calculator</div>
+    <div class="tool-tag">CTR Calculator</div>
+    <div class="tool-tag">Embed Code Generator</div>
+    <div class="tool-tag">Timestamp Link</div>
+    <div class="tool-tag">Subscribe Link Gen</div>
+    <div class="tool-tag">Video ID Extractor</div>
+    <div class="tool-tag">URL Shortener</div>
+    <div class="tool-tag">Chapter Generator</div>
+  </div>
+
+  <div class="cta-box">
+    <h2>Ready to grow your channel?</h2>
+    <p style="color:var(--muted); font-size:14px;">Access all premium-grade tools right now, no strings attached.</p>
+    <a href="/" class="btn-primary">🚀 Start Using Free Tools</a>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Tube<span>Forge</span></div>
+  <p>Free YouTube tools for every content creator.</p>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+  </div>
+  <div class="footer-copy">© 2026 TubeForge — 100% Free, No Login Required</div>
+</footer>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
