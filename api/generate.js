@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
     const timeoutId = setTimeout(() => controller.abort(), 9000);
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,28 +38,20 @@ module.exports = async function handler(req, res) {
 
     const data = await response.json();
 
-    console.log('Gemini status:', response.status);
-    console.log('Gemini response:', JSON.stringify(data));
-
     if (!response.ok) {
       return res.status(500).json({ 
-        error: data.error?.message || 'Gemini API Error',
-        details: JSON.stringify(data)
+        error: data.error?.message || 'Gemini API Error'
       });
     }
 
     if (!data.candidates || !data.candidates[0]) {
-      return res.status(500).json({ 
-        error: 'No response from Gemini',
-        details: JSON.stringify(data)
-      });
+      return res.status(500).json({ error: 'No response from Gemini' });
     }
 
     const aiText = data.candidates[0].content.parts[0].text;
     res.status(200).json({ result: aiText });
 
   } catch (error) {
-    console.error('Catch error:', error.message);
     if (error.name === 'AbortError') {
       return res.status(504).json({ error: 'Timeout!' });
     }
